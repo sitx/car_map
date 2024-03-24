@@ -9,11 +9,14 @@
   <body>
     <h1>World Editor</h1>
     <canvas id="myCanvas"></canvas>
-    <div id="controls"></div>
+    <div id="controls">
+      <button onclick="dispose()">🗑️</button>
+      <button onclick="save()">💾</button>
+    </div>
 
     <div class="zoom-controls">
-      <button class="btn" id="buttonZoomIn" onclick="zoomIn()">+</button>
-      <button class="btn" id="buttonZoomOut" onclick="zoomOut()">-</button>
+      <button class="btn" id="buttonZoomIn" onclick="zoomIn()">➕</button>
+      <button class="btn" id="buttonZoomOut" onclick="zoomOut()">➖</button>
     </div>
 
     <script src="js/graphEditor.js"></script>
@@ -30,19 +33,23 @@
 
       const ctx = myCanvas.getContext("2d");
 
-      const p1 = new Point(200, 200);
-      const p2 = new Point(500, 200);
-      const p3 = new Point(400, 400);
-      const p4 = new Point(100, 300);
+      const graphString = localStorage.getItem("graph");
+      const graphInfo = graphString ? JSON.parse(graphString) : null;
 
-      const s1 = new Segment(p1, p2);
-      const s2 = new Segment(p1, p3);
-      const s3 = new Segment(p1, p4);
-      const s4 = new Segment(p3, p2);
+      const graph = graphInfo ? Graph.load(graphInfo) : new Graph();
 
-      const graph = new Graph([p1, p2, p3, p4], [s1, s2, s3, s4]);
       const viewport = new Viewport(myCanvas);
       const graphEditor = new GraphEditor(viewport, graph);
+
+      animate();
+
+      function animate() {
+        viewport.reset();
+        graphEditor.display();
+        requestAnimationFrame(animate);
+      }
+
+      // buttons functions
 
       function zoomOut() {
         if (viewport.zoom < 5) {
@@ -53,12 +60,14 @@
         if (viewport.zoom > 1) viewport.zoom -= 0.1;
       }
 
-      animate();
+      //buttons controls functions
 
-      function animate() {
-        viewport.reset();
-        graphEditor.display();
-        requestAnimationFrame(animate);
+      function dispose() {
+        graphEditor.dispose();
+      }
+
+      function save() {
+        localStorage.setItem("graph", JSON.stringify(graph));
       }
     </script>
   </body>
