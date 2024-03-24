@@ -16,9 +16,7 @@ class GraphEditor {
 
   #addEventListeners() {
     this.canvas.addEventListener("mousedown", this.#handleMouseDown.bind(this));
-
     this.canvas.addEventListener("mousemove", this.#handleMouseMove.bind(this));
-
     this.canvas.addEventListener("contextmenu", (evt) => {
       evt.preventDefault();
     });
@@ -52,7 +50,11 @@ class GraphEditor {
 
   #handleMouseMove(evt) {
     this.mouse = this.viewport.getMouse(evt);
-    this.hovered = getNearestPoint(this.mouse, this.graph.points, 10);
+    this.hovered = getNearestPoint(
+      this.mouse,
+      this.graph.points,
+      10 * this.viewport.zoom
+    );
 
     if (this.dragging == true) {
       this.selected.x = this.mouse.x;

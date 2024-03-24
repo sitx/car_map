@@ -11,6 +11,11 @@
     <canvas id="myCanvas"></canvas>
     <div id="controls"></div>
 
+    <div class="zoom-controls">
+      <button class="btn" id="buttonZoomIn" onclick="zoomIn()">+</button>
+      <button class="btn" id="buttonZoomOut" onclick="zoomOut()">-</button>
+    </div>
+
     <script src="js/graphEditor.js"></script>
     <script src="js/viewport.js"></script>
     <script src="js/math/graph.js"></script>
@@ -39,12 +44,26 @@
       const viewport = new Viewport(myCanvas);
       const graphEditor = new GraphEditor(viewport, graph);
 
+      function zoomOut() {
+        console.log("+", viewport.zoom);
+        if (viewport.zoom < 5) {
+          viewport.zoom += 0.1;
+        }
+      }
+      function zoomIn() {
+        console.log("-", viewport.zoom);
+        if (viewport.zoom > 1) viewport.zoom -= 0.1;
+      }
+
       animate();
 
       function animate() {
         ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
         ctx.save();
+        ctx.translate(viewport.center.x, viewport.center.y);
         ctx.scale(1 / viewport.zoom, 1 / viewport.zoom);
+        const offset = viewport.getOffset();
+        ctx.translate(offset.x, offset.y);
         graphEditor.display();
         ctx.restore();
         requestAnimationFrame(animate);
