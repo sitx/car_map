@@ -45,13 +45,11 @@
       const graphEditor = new GraphEditor(viewport, graph);
 
       function zoomOut() {
-        console.log("+", viewport.zoom);
         if (viewport.zoom < 5) {
           viewport.zoom += 0.1;
         }
       }
       function zoomIn() {
-        console.log("-", viewport.zoom);
         if (viewport.zoom > 1) viewport.zoom -= 0.1;
       }
 
